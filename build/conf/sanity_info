@@ -1,0 +1,4 @@
+SANITY_VERSION 1
+TMPDIR /home/ubuntu/build_yocto/yocto_git/layers/build/tmp
+SSTATE_DIR /home/ubuntu/build_yocto/yocto_git/layers/build/sstate-cache
+NATIVELSBSTRING ubuntu-20.04
