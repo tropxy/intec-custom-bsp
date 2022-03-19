@@ -23,6 +23,51 @@ The `demo.cert.pem` needs to be added to the Yocto image, in `/etc/rauc/` of the
 $ ln -sf demo.cert.pem /etc/rauc/keyring.pem
 ```
 
+It is also required to add the demo.cert.pem to the rauc directory in the device-specific BSP layer (meta-in-tech-distro):
+
+```shell
+$ cp demo.crt.pem  yocto/source/meta-in-tech-sc-distro/recipes-core/rauc/files/
+```
+
+And also modify the `rauc_%.bbapend`:
+
+```shell
+FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+
+SRC_URI += " \
+    file://system.conf \
+    file://001-rauc.service-tmpdir.patch \
+"
+
+RAUC_KEYRING_FILE = "keyring.pem"
+
+SRC_URI += " \
+    file://pre-install.sh \
+    file://post-install.sh \
+    file://system-info.sh \
+    file://i2se-devel.crt \
+    file://i2se-release.crt \
+    file://switch.cert.pem \
+"
+
+do_install_append() {
+    install -d ${D}/usr/lib/rauc
+    install -d ${D}${sysconfdir}/rauc
+    install -m 0644 ${WORKDIR}/i2se-devel.crt   ${D}${sysconfdir}/rauc/
+    install -m 0644 ${WORKDIR}/i2se-release.crt ${D}${sysconfdir}/rauc/
+    ln -sf switch.cert.pem ${D}${sysconfdir}/rauc/keyring.pem
+
+    install -d ${D}/usr/lib/rauc
+    install -o root -g root -m 0755 ${WORKDIR}/pre-install.sh  ${D}/usr/lib/rauc/
+    install -o root -g root -m 0755 ${WORKDIR}/post-install.sh ${D}/usr/lib/rauc/
+    install -o root -g root -m 0755 ${WORKDIR}/system-info.sh  ${D}/usr/lib/rauc/
+}
+
+FILES_${PN} += " /usr/lib/rauc"
+
+PACKAGECONFIG ??= "service network json nocreate"
+```
+
 Also for this image, we need to specify post-install scripts. In `meta-in-tech-sc/conf/machine/tarragon.conf`:
 
 ```shell
@@ -41,7 +86,8 @@ The bundle will be added to the `build/tmp/deploy/image/<machine>` with a .raucb
 
 To add Docker to the image, not only some packages need to be added, but also the Kernel must be modified.
 The packages can be added to the `conf/local.conf` file:
-``` shell
+
+```shell
 IMAGE_INSTALL_append = " \
     packagegroup-common \
     packagegroup-${MACHINE} \
@@ -75,9 +121,11 @@ CONFIG_UTS_NS: missing
 CONFIG_CGROUPS: enabled
 ....
 ```
+
 check: https://stackoverflow.com/questions/67657582/yocto-meta-virtualization-error-starting-daemon-devices-cgroup-isnt-mounted
 
 ## Kernel config
+
 Check Intech appendix on notes about changing the Kernel config
 https://github.com/I2SE/in-tech-sc-bsp#appendix
 
@@ -91,7 +139,8 @@ We were able to run Docker on Charge Contol C board. Here are the steps you need
 1. Download the "thud" branch from the layer meta-virtualization (I am not sure which branch you checked out, so for compatibility reasons we would recommend sticking to "thud") and add it to your sources folder (I guess you already did this).
 
 2. Edit the bblayers.conf file to include the new layer (You already done this).
-``` shell
+
+```shell
    BBLAYERS ?= " \
     ${BSPDIR}/meta \
     ${BSPDIR}/meta-poky \
@@ -107,6 +156,7 @@ We were able to run Docker on Charge Contol C board. Here are the steps you need
     ${BSPDIR}/meta-in-tech-sc-distro \
    "
 ```
+
 3. The changes you made in local.conf are right.
 
 4. In the bbappend file found in meta-in-tech-sc/recipes-kernel/linux/linux-imx\_%.bbappend, change the SRC_URI to be the following:
@@ -125,7 +175,7 @@ Use the command bitbake linux-imx -c menuconfig or bitbake -c menuconfig linux-i
 
 6. If you used the solution 5.2, then you would need to perform the following commands in your build directory to save the configurations permanently and move them to your recipe folder.
 
-``` shell
+```shell
 bitbake -c savedefconfig linux-imx
 
 cp tmp/work/tarragon-poky-linux-gnueabi/linux-imx/4.9.123-r0/build/defconfig  ../source/meta-in-tech-sc/recipes-kernel/linux/linux-imx/imx/
