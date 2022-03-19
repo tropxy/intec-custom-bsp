@@ -75,6 +75,8 @@ CONFIG_UTS_NS: missing
 CONFIG_CGROUPS: enabled
 ....
 ```
+check: https://stackoverflow.com/questions/67657582/yocto-meta-virtualization-error-starting-daemon-devices-cgroup-isnt-mounted
+
 ## Kernel config
 Check Intech appendix on notes about changing the Kernel config
 https://github.com/I2SE/in-tech-sc-bsp#appendix
