@@ -196,3 +196,25 @@ $ bitbake core-bundle-minimal
 ```
 
 8. You may check the .config file located in tmp/work/tarragon-poky-linux-gnueabi/linux-imx/4.9.123-r0/build/ to make sure that your changes are added to the kernel configurations.
+
+
+# GLIBC [In progress]
+
+The default GLIBC version used by intech image is version 2.28. This means that our python bundles and possibly any compiled code (like rust), must be done based on this version, which can be found in `debian:buster` distro.
+But what if we want to update the GLIBC version used by the board? 
+
+This is uncharted territory and it is very likely the following tips may not work.
+
+1. find where `GLIBCVERSION` is used and set: `find . -type f | xargs grep -l "GLIBCVERSION"`
+That should output the file: `/yocto/source/meta/conf/distro/include/tcmode-default.inc`
+That file sets the GLIBC version to 2.28: `GLIBCVERSION ?= "2.28%"`
+
+2. Change the version preferred to `2.35` for example.
+
+3. Add the corresponding glibc recipes version to the `meta-core` dir in `yocto/source/meta/recipes-core/glibc`
+Get all the recipes and files from the yoctoproject: https://git.yoctoproject.org/poky/plain/meta/recipes-core/glibc/
+Add the files into the `yocto/source/meta/recipes-core/glibc` directory
+
+4. Check if the `UNINACTIVE` settings are an issue or not: `yocto/source/meta/conf/distro/include/yocto-uninative.inc`
+
+Check these slides about Yocto: https://2net.co.uk/slides/ndc-techtown/yocto-bsp-csimmonds-ndctechtown-2021.pdf
