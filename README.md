@@ -1,5 +1,40 @@
 # intech-custom-bsp
 
+## Useful commands:
+
+1. Find file in the top directory recursively
+```shell
+$ find . -name file-name
+```
+
+2. Find reference within the files starting from the top directory recursively
+```shell
+$ find . -type f | xargs grep -l "word-in-files"
+```
+
+3. Check on partitions and their size:
+```shell
+$ lsblk
+$ fdisk -l
+$ df -h
+```
+
+4. Get size of the directories:
+```shell
+$ du -sh .
+```
+
+5. Use tmux
+```shell
+$ tmux ls
+$ tmux attach-session -t 0
+```
+6. Bitbake
+```shell
+bitbake world -c cleanall --continue
+bitbake-layers show-layers
+```
+
 # RAUC
 
 To use this feature, is required to generate the private and public key, which are used to sign and verify the bundle image.
@@ -55,6 +90,7 @@ do_install_append() {
     install -d ${D}${sysconfdir}/rauc
     install -m 0644 ${WORKDIR}/i2se-devel.crt   ${D}${sysconfdir}/rauc/
     install -m 0644 ${WORKDIR}/i2se-release.crt ${D}${sysconfdir}/rauc/
+    install -m 0644 ${WORKDIR}/switch.cert.pem ${D}${sysconfdir}/rauc/
     ln -sf switch.cert.pem ${D}${sysconfdir}/rauc/keyring.pem
 
     install -d ${D}/usr/lib/rauc
@@ -74,7 +110,12 @@ Also for this image, we need to specify post-install scripts. In `meta-in-tech-s
 $ RAUC_SLOT_rootfs[hooks] ?= "post-install"
 ```
 
-To create the bundle, it is only required to run the following command:
+To create the bundle, it is required to run first:
+
+```shell
+$ bitbake core-image-minimal
+```
+so that all files are generated, including new build target commands coming from rauc
 
 ```shell
 $ bitbake core-bundle-minimal
