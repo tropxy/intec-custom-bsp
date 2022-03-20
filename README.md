@@ -31,8 +31,19 @@ $ tmux attach-session -t 0
 ```
 6. Bitbake
 ```shell
-bitbake world -c cleanall --continue
-bitbake-layers show-layers
+$ bitbake world -c cleanall --continue
+$ bitbake-layers show-layers
+```
+7. RAUC
+```shell
+$ rauc status mark-active other
+$ rauc status mark-good other
+```
+
+8. symlinks
+```shell
+$ ln -sf i2se-devel.crt /etc/rauc/keyring.pem
+$ unlink keyring.pem
 ```
 
 # RAUC
