@@ -1,5 +1,11 @@
 # intech-custom-bsp
 
+This repo is an effort to document everything that has been changed from the default Yocto image provided by in-tech: https://github.com/I2SE/in-tech-sc-bsp
+
+It includes tools or packages added and the steps to add them.
+
+
+
 ## Useful commands:
 
 1. Find file in the top directory recursively
