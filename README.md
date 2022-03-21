@@ -270,3 +270,32 @@ Add the files into the `yocto/source/meta/recipes-core/glibc` directory
 4. Check if the `UNINACTIVE` settings are an issue or not: `yocto/source/meta/conf/distro/include/yocto-uninative.inc`
 
 Check these slides about Yocto: https://2net.co.uk/slides/ndc-techtown/yocto-bsp-csimmonds-ndctechtown-2021.pdf
+
+### libiio
+To add libiio and python bindings, the libiio recipe needed to be modified from `meta-oe/recipes-support/libiio/libiio_git.bb`
+
+1. substitute or modify the intech `libiio_git.bb` based on: http://cgit.openembedded.org/meta-openembedded/tree/meta-oe/recipes-support/libiio/libiio_git.bb
+2. Add the libiio and the patch file inside: http://cgit.openembedded.org/meta-openembedded/tree/meta-oe/recipes-support/libiio
+3. set the packages to install in `build/conf/local.conf`: 
+```shell
+IMAGE_INSTALL_append = " \
+    packagegroup-common \
+    packagegroup-${MACHINE} \
+    packagegroup-${PROJECT} \
+    ${@bb.utils.contains('SUBMACHINE', 'oppcharge', 'packagegroup-oppcharge', '', d)} \
+    ${@bb.utils.contains('EXTRA_IMAGE_FEATURES', 'debug-tweaks', 'packagegroup-develop', '', d)} \
+    ${EXTRA_PACKAGES} \
+    vim \
+    libiio \
+    libiio-tests \
+    python3 \
+    python3-pip \
+"
+```
+
+The package `libiio-tests` includes the iio commands like `iio_info` and `iio_readdev`. 
+Its name was found because of this line in the `libiio_git.bb`:
+```shell
+PACKAGES =+ "${PN}-iiod ${PN}-tests ${PN}-${PYTHON_PN}"
+```
+and understanding that in https://github.com/analogdevicesinc/libiio/tree/v0.23 `tests` and `iiod` are directories in the project repo.
