@@ -275,8 +275,24 @@ Check these slides about Yocto: https://2net.co.uk/slides/ndc-techtown/yocto-bsp
 To add libiio and python bindings, the libiio recipe needed to be modified from `meta-oe/recipes-support/libiio/libiio_git.bb`
 
 1. substitute or modify the intech `libiio_git.bb` based on: http://cgit.openembedded.org/meta-openembedded/tree/meta-oe/recipes-support/libiio/libiio_git.bb
-2. Add the libiio and the patch file inside: http://cgit.openembedded.org/meta-openembedded/tree/meta-oe/recipes-support/libiio
-3. set the packages to install in `build/conf/local.conf`: 
+
+Warning!!
+The recipe as it is cant be parsed.
+
+These lines where `:` is:
+```shell
+RDEPENDS:${PN}:remove = "${PYTHON_PN}-core"
+RDEPENDS:${PN}-${PYTHON_PN} = "${PN} ${PYTHON_PN}-core ${PYTHON_PN}-ctypes ${PYTHON_PN}-stringold"
+```
+need to be modified to:
+```shell
+RDEPENDS_${PN}-remove = "${PYTHON_PN}-core"
+RDEPENDS_${PN}-${PYTHON_PN} = "${PN} ${PYTHON_PN}-core ${PYTHON_PN}-ctypes ${PYTHON_PN}-stringold"
+```
+
+3. Add the libiio and the patch file inside: http://cgit.openembedded.org/meta-openembedded/tree/meta-oe/recipes-support/libiio
+
+4. set the packages to install in `build/conf/local.conf`: 
 ```shell
 IMAGE_INSTALL_append = " \
     packagegroup-common \
