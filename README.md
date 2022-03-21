@@ -271,7 +271,7 @@ Add the files into the `yocto/source/meta/recipes-core/glibc` directory
 
 Check these slides about Yocto: https://2net.co.uk/slides/ndc-techtown/yocto-bsp-csimmonds-ndctechtown-2021.pdf
 
-### libiio
+## Add libiio
 To add libiio and python bindings, the libiio recipe needed to be modified from `meta-oe/recipes-support/libiio/libiio_git.bb`
 
 1. substitute or modify the intech `libiio_git.bb` based on: http://cgit.openembedded.org/meta-openembedded/tree/meta-oe/recipes-support/libiio/libiio_git.bb
