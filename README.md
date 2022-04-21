@@ -304,6 +304,57 @@ PACKAGES =+ "${PN}-iiod ${PN}-tests ${PN}-${PYTHON_PN}"
 and understanding that in https://github.com/analogdevicesinc/libiio/tree/v0.23 `tests` and `iiod` are directories in the project repo.
 
 
+## Add Mosquitto Broker
+Mosquitto recipe is already part of intech meta-openembedded revision selected, specifically in `source/meta-openembedded/meta-networking/recipes-connectivity/mosquitto/`
+The BSP includes mosquitto recipe layer version: 1.5.1.bb which fetches the mosquitto release 1.5.1 version
+
+If another recipe for another release is preferred, we can use this one: https://git.openembedded.org/meta-openembedded/tree/meta-networking/recipes-connectivity/mosquitto/mosquitto_2.0.14.bb
+
+which fetches the most updated mosquitto release version (2.0.14 @ 21.04.2022)
+
+To tell bitbake to install the mosquitto into the image, we need to set the package to install in `build/conf/local.conf`: 
+```shell
+IMAGE_INSTALL_append = " \
+    packagegroup-common \
+    packagegroup-${MACHINE} \
+    packagegroup-${PROJECT} \
+    ${@bb.utils.contains('SUBMACHINE', 'oppcharge', 'packagegroup-oppcharge', '', d)} \
+    ${@bb.utils.contains('EXTRA_IMAGE_FEATURES', 'debug-tweaks', 'packagegroup-develop', '', d)} \
+    ${EXTRA_PACKAGES} \
+    vim \
+    libiio \
+    libiio-tests \
+    python3 \
+    python3-pip \
+    mosquitto \
+"
+```
+After the build and the installation of the image, we can login to the board and check if the mosquitto service is running:
+`$ systemctl status mosquitto.service`
+
+The recipe adds a default configuration to `/etc/mosquitto/mosquitto.conf`:
+```shell
+port 1883
+listener 9001
+protocol websockets
+# enforce a clean state after bootup
+persistence false
+log_type error
+log_type warning
+connection_messages false
+```
+As we dont wish to use the websockets listener, we deleted the lines that relate to it, leaving it as:
+```shell
+port 1883
+# enforce a clean state after bootup
+persistence false
+log_type error
+log_type warning
+connection_messages false
+```
+After this change, it is require to restart the mosquitto.service:
+`$ systemctl restart mosquitto.service`
+
 
 ## GLIBC [In progress, To be Tested]
 
