@@ -291,6 +291,7 @@ IMAGE_INSTALL_append = " \
     vim \
     libiio \
     libiio-tests \
+    libiio-iiod \
     python3 \
     python3-pip \
 "
