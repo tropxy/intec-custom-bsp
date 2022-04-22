@@ -52,6 +52,49 @@ $ ln -sf i2se-devel.crt /etc/rauc/keyring.pem
 $ unlink keyring.pem
 ```
 
+
+# Python 3
+Python 3 can be specified to be installed by adding the package to the `conf/local.conf` file:
+
+```shell
+IMAGE_INSTALL_append = " \
+    packagegroup-common \
+    packagegroup-${MACHINE} \
+    packagegroup-${PROJECT} \
+    ${@bb.utils.contains('SUBMACHINE', 'oppcharge', 'packagegroup-oppcharge', '', d)} \
+    ${@bb.utils.contains('EXTRA_IMAGE_FEATURES', 'debug-tweaks', 'packagegroup-develop', '', d)} \
+    ${EXTRA_PACKAGES} \
+    python3 \
+    python3-pip \
+    ...
+"
+```
+
+Intech current BSP only has recipes for python 3.5.3 and pyton 3.8.2, which can be found in `source/meta/recipes-devtools/`.
+
+The preferred version to be installed can be specified with a `PREFERRED_VERSION_foo` variable, that can be added to the `source/meta-in-tech-sc/conf/machine/tarragon.conf`:
+
+```shell
+#@TYPE: Machine
+#@NAME: in-tech Tarragon Platform
+#@SOC: i.MX6ULL
+#@DESCRIPTION: Machine configuration for in-tech Tarragon Boards
+#@MAINTAINER: Michael Heimpold <michael.heimpold@in-tech.com>
+
+MACHINEOVERRIDES =. "mx6:mx6ull:"
+
+include conf/machine/include/imx-base.inc
+include conf/machine/include/tune-cortexa7.inc
+
+UBOOT_MACHINE = "tarragon_config"
+
+KERNEL_DEVICETREE = "imx6ull-tarragon-master.dtb imx6ull-tarragon-slave.dtb imx6ull-tarragon-micro.dtb imx6ull-tarragon-slavext.dtb"
+
+PREFERRED_VERSION_python3 = "3.8%"
+...
+```
+
+
 # RAUC
 
 To use this feature, is required to generate the private and public key, which are used to sign and verify the bundle image.
