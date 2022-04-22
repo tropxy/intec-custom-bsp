@@ -99,7 +99,7 @@ SRC_URI += " \
     file://system-info.sh \
     file://i2se-devel.crt \
     file://i2se-release.crt \
-    file://switch.cert.pem \
+    file://demo.cert.pem \
 "
 
 do_install_append() {
@@ -107,8 +107,8 @@ do_install_append() {
     install -d ${D}${sysconfdir}/rauc
     install -m 0644 ${WORKDIR}/i2se-devel.crt   ${D}${sysconfdir}/rauc/
     install -m 0644 ${WORKDIR}/i2se-release.crt ${D}${sysconfdir}/rauc/
-    install -m 0644 ${WORKDIR}/switch.cert.pem ${D}${sysconfdir}/rauc/
-    ln -sf switch.cert.pem ${D}${sysconfdir}/rauc/keyring.pem
+    install -m 0644 ${WORKDIR}/demo.cert.pem ${D}${sysconfdir}/rauc/
+    ln -sf demo.cert.pem ${D}${sysconfdir}/rauc/keyring.pem
 
     install -d ${D}/usr/lib/rauc
     install -o root -g root -m 0755 ${WORKDIR}/pre-install.sh  ${D}/usr/lib/rauc/
