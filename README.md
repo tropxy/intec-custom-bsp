@@ -313,6 +313,10 @@ If another recipe for another release is preferred, we can use this one: https:/
 
 which fetches the most updated mosquitto release version (2.0.14 @ 21.04.2022)
 
+### WARNING
+There is another mosquitto layer that is included in `source/meta-in-tech-sc-distro/recipes-connectivity/mosquitto/`, which has a 1.5.7.bb layer and also includes a `mosquitto.service` file for the systemd. So, this is most likely the layert used.
+
+
 To tell bitbake to install the mosquitto into the image, we need to set the package to install in `build/conf/local.conf`: 
 ```shell
 IMAGE_INSTALL_append = " \
