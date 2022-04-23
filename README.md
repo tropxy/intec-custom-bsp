@@ -103,6 +103,8 @@ Maybe using the `thud+python3.9` would make it work.
 Also tried this pip recipe: https://git.openembedded.org/openembedded-core-contrib/tree/meta/recipes-devtools/python/python3-pip_20.0.2.bb?id=1242b04e97fbef3d926bcf706ac99a580109e58b
 no luck!
 
+However, I tried to add the `python-setuptools_41.2.0.bb` and the `python-setuptools.inc` from the `thud+python3.9` present in https://github.com/I2SE/poky/tree/thud%2Bpython39/meta/recipes-devtools/python to `source/meta/recipes-devtools` and that worked!
+
 # RAUC
 
 To use this feature, is required to generate the private and public key, which are used to sign and verify the bundle image.
