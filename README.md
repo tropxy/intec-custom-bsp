@@ -93,8 +93,8 @@ KERNEL_DEVICETREE = "imx6ull-tarragon-master.dtb imx6ull-tarragon-slave.dtb imx6
 PREFERRED_VERSION_python3 = "3.8%"
 ...
 ```
-
-Intech has also a branch that includes python3.9: thud+python3.9. I tried to add the recipes in `poky/meta/recipes-devtools/python39` to `source/meta/recipes-devtools`in the yocto image, but no luck as there are some setuptools conflicts. So the only way is really to checkout the thud+python3.9 revision and give it a spin.
+## Python3.9
+Intech has also a branch that includes python3.9: thud+python3.9 (https://github.com/I2SE/poky/tree/thud%2Bpython39/meta/recipes-devtools). I tried to add the recipes in `poky/meta/recipes-devtools/python39` to `source/meta/recipes-devtools`in the yocto image, but no luck as there are some setuptools conflicts. So the only way is really to checkout the thud+python3.9 revision and give it a spin.
 Also tried to add a recipe for python3-pip_22.0.3, present in: https://git.openembedded.org/openembedded-core-contrib/tree/meta/recipes-devtools/python
 but also wouldnt work, again most likely because of the setuptools issue, which is also described here: https://stackoverflow.com/questions/65640476/pip3-on-python3-9-fails-on-htmlparser-object-has-no-attribute-unescape
 
