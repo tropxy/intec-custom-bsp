@@ -94,6 +94,14 @@ PREFERRED_VERSION_python3 = "3.8%"
 ...
 ```
 
+Intech has also a branch that includes python3.9: thud+python3.9. I tried to add the recipes in `poky/meta/recipes-devtools/python39` to `source/meta/recipes-devtools`in the yocto image, but no luck as there are some setuptools conflicts. So the only way is really to checkout the thud+python3.9 revision and give it a spin.
+Also tried to add a recipe for python3-pip_22.0.3, present in: https://git.openembedded.org/openembedded-core-contrib/tree/meta/recipes-devtools/python
+but also wouldnt work, again most likely because of the setuptools issue, which is also described here: https://stackoverflow.com/questions/65640476/pip3-on-python3-9-fails-on-htmlparser-object-has-no-attribute-unescape
+
+Maybe using the `thud+python3.9` would make it work.
+
+Also tried this pip recipe: https://git.openembedded.org/openembedded-core-contrib/tree/meta/recipes-devtools/python/python3-pip_20.0.2.bb?id=1242b04e97fbef3d926bcf706ac99a580109e58b
+no luck!
 
 # RAUC
 
