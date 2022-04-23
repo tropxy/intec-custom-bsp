@@ -70,7 +70,7 @@ IMAGE_INSTALL_append = " \
 "
 ```
 
-Intech current BSP only has recipes for python 3.5.3 and pyton 3.8.2, which can be found in `source/meta/recipes-devtools/`.
+Intech current BSP only has recipes for python 3.5.3 and pyton 3.8.2, which can be found in `source/meta/recipes-devtools/python` or `source/meta/recipes-devtools/python38`.
 
 The preferred version to be installed can be specified with a `PREFERRED_VERSION_foo` variable, that can be added to the `source/meta-in-tech-sc/conf/machine/tarragon.conf`:
 
