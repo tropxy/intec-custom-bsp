@@ -110,6 +110,8 @@ no luck!
 
 However, I tried to add the `python-setuptools_41.2.0.bb` and the `python-setuptools.inc` from the `thud+python3.9` present in https://github.com/I2SE/poky/tree/thud%2Bpython39/meta/recipes-devtools/python to `source/meta/recipes-devtools` and that worked!
 
+[UPDATE - April 2022] - I tried to include the python3.9 recipe using the thud+python3.9, but no luck...
+
 # RAUC
 
 To use this feature, is required to generate the private and public key, which are used to sign and verify the bundle image.
