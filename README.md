@@ -18,35 +18,40 @@ $ find . -name file-name
 $ find . -type f | xargs grep -l "word-in-files"
 ```
 
-3. Check on partitions and their size:
+3. Delete matching files
+```shell
+find . -name "*.pyc" -exec git rm -f "{}" \;
+```
+
+4. Check on partitions and their size:
 ```shell
 $ lsblk
 $ fdisk -l
 $ df -h
 ```
 
-4. Get size of the directories:
+5. Get size of the directories:
 ```shell
 $ du -sh .
 ```
 
-5. Use tmux
+6. Use tmux
 ```shell
 $ tmux ls
 $ tmux attach-session -t 0
 ```
-6. Bitbake
+7. Bitbake
 ```shell
 $ bitbake world -c cleanall --continue
 $ bitbake-layers show-layers
 ```
-7. RAUC
+8. RAUC
 ```shell
 $ rauc status mark-active other
 $ rauc status mark-good other
 ```
 
-8. symlinks
+9. symlinks
 ```shell
 $ ln -sf i2se-devel.crt /etc/rauc/keyring.pem
 $ unlink keyring.pem
