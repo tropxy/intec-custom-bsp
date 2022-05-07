@@ -200,6 +200,9 @@ $ bitbake core-bundle-minimal
 
 The bundle will be added to the `build/tmp/deploy/image/<machine>` with a .raucb extension
 
+### Refereces
+* https://rauc.readthedocs.io/en/latest/integration.html#bundle-generation
+
 # Docker Support
 
 To add Docker to the image, not only some packages need to be added, but also the Kernel must be modified.
