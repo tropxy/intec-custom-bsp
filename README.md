@@ -319,6 +319,26 @@ $ bitbake core-bundle-minimal
 8. You may check the .config file located in tmp/work/tarragon-poky-linux-gnueabi/linux-imx/4.9.123-r0/build/ to make sure that your changes are added to the kernel configurations.
 
 
+## Add tcpdump 
+
+To tell bitbake to install the tcpdump tool into the image, we need to set the package to install in `build/conf/local.conf`: 
+```shell
+IMAGE_INSTALL_append = " \
+    packagegroup-common \
+    packagegroup-${MACHINE} \
+    packagegroup-${PROJECT} \
+    ${@bb.utils.contains('SUBMACHINE', 'oppcharge', 'packagegroup-oppcharge', '', d)} \
+    ${@bb.utils.contains('EXTRA_IMAGE_FEATURES', 'debug-tweaks', 'packagegroup-develop', '', d)} \
+    ${EXTRA_PACKAGES} \
+    vim \
+    libiio \
+    libiio-tests \
+    python3 \
+    python3-pip \
+    tcpdump \
+"
+```
+
 ## Add libiio
 In-tech's image contains an older recipe for libiio which installs versions 0.14.0, which is not even supported for the python bindings.
 
@@ -357,6 +377,7 @@ IMAGE_INSTALL_append = " \
     libiio-iiod \
     python3 \
     python3-pip \
+    tcpdump \
 "
 ```
 
@@ -394,6 +415,7 @@ IMAGE_INSTALL_append = " \
     libiio-tests \
     python3 \
     python3-pip \
+    tcpdump \
     mosquitto \
 "
 ```
