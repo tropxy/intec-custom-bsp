@@ -45,10 +45,23 @@ $ tmux attach-session -t 0
 $ bitbake world -c cleanall --continue
 $ bitbake-layers show-layers
 ```
-8. RAUC
+8. RAUC (in the target system)
 ```shell
+$ rauc status
 $ rauc status mark-active other
 $ rauc status mark-good other
+```
+
+Also, if one wants to change the certificate file for verification of the signed bundle..
+
+Set it to a developer certificate key:
+ ```shell
+ln -sf i2se-devel.crt /etc/rauc/keyring.pem
+```
+
+If necessary (set back) to the Release Key:
+```shell
+ln -s -f i2se-release.crt keyring.pem
 ```
 
 9. symlinks
@@ -122,13 +135,17 @@ For testing, we can create a simple key pair:
 $ openssl req -x509 -newkey rsa:4096 -nodes -keyout demo.key.pem -out demo.cert.pem -subj "/O=rauc Inc./CN=rauc-demo"
 ```
 
-It is then necessary to tell RAUC where to look for the keys. That can be achieved by setting the keys path in one of the project configuration files. For example, the following can be added to `meta-in-tech-sc/conf/machine/tarragon.conf`:
+In order to sign the update bundle, it is necessary to tell RAUC where to look for the keys. 
+That can be achieved by setting the keys path in one of the project configuration files. 
+For example, the following can be added to `meta-in-tech-sc/conf/machine/tarragon.conf`:
 
 ```shell
 RAUC_KEY_FILE = "<absolute_path>/cert/demo.key.pem"
 RAUC_CERT_FILE = "<absolute_path>/cert/demo.cert.pem"
 ```
 
+(I am not too sure about this step...I think this can be skipped and be done in the device target already after 
+the bundle is created, but before its installation!):
 The `demo.cert.pem` needs to be added to the Yocto image, in `/etc/rauc/` of the target system and to be linked to the keyring.pem:
 
 ```shell
@@ -136,13 +153,21 @@ $ ln -sf demo.cert.pem /etc/rauc/keyring.pem
 ```
 
 It is also required to add the demo.cert.pem to the rauc directory in the device-specific BSP layer (meta-in-tech-distro):
-
+This will guarantee that the demo.cert.pem will be installed in the device, together with the bundle.
 ```shell
 $ cp demo.crt.pem  yocto/source/meta-in-tech-sc-distro/recipes-core/rauc/files/
 ```
 
-And also modify the `rauc_%.bbapend`:
+And also modify the `recipes-core/rauc/rauc_%.bbappend`...
 
+
+In the following instructions, we are telling Yovto to:
+1. Look for files in the `${THISDIR}/files` directory
+2. To install in the device the i2se certs and the demo.cert too
+3. We are telling RAUC that the certification file for verification
+will be saved as `keyring.pem` in `/etc/rauc/` (https://rauc.readthedocs.io/en/stable/integration.html#target-system-setup)
+4. we do a symbolic link of the `demo.cert.pem` to the `/etc/rauc/keyring.pem` file
+   
 ```shell
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
