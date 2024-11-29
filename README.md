@@ -70,7 +70,11 @@ $ ln -sf i2se-devel.crt /etc/rauc/keyring.pem
 $ unlink keyring.pem
 ```
 
-
+## References
+1. https://rauc.readthedocs.io/en/stable/integration.html#target-system-setup
+2. https://github.com/rauc/meta-rauc/blob/master/classes-recipe/bundle.bbclass
+3. https://rauc.readthedocs.io/en/stable/examples.html
+   
 # Python 3
 Python 3 can be specified to be installed by adding the package to the `conf/local.conf` file:
 
